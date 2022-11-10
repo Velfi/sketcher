@@ -6,9 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = "0.4.22"
 dssim-core = "3.2.5"
+humantime = "2.1.0"
 image = "0.24.4"
+imageproc = "0.23.0"
 imgref = "1.9.4"
+rand = "0.8.5"
 rgb = "0.8.34"
 tracing = "0.1.37"
 tracing-subscriber = "0.3.16"

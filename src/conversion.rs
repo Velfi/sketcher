@@ -1,5 +1,5 @@
-use image::RgbImage;
-use rgb::RGB8;
+use image::RgbaImage;
+use rgb::RGBA8;
 
 pub struct ConversionWrapper<T> {
   inner: T
@@ -11,8 +11,8 @@ impl<T> ConversionWrapper<T> {
   }
 }
 
-impl From<ConversionWrapper<&RgbImage>> for Vec<RGB8> {
-    fn from(wrapper: ConversionWrapper<&RgbImage>) -> Self {
-      wrapper.inner.pixels().map(|p| rgb::RGB8::from(p.0)).collect()
+impl From<ConversionWrapper<&RgbaImage>> for Vec<RGBA8> {
+    fn from(wrapper: ConversionWrapper<&RgbaImage>) -> Self {
+      wrapper.inner.pixels().map(|p| rgb::RGBA8::from(p.0)).collect()
     }
 }

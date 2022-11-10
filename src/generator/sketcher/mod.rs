@@ -5,5 +5,5 @@ pub trait Sketcher {
 
     fn undo(&mut self);
     fn next(&mut self);
-    fn image(&self) -> Self::Image;
+    fn image(&self) -> &Self::Image;
 }
