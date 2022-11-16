@@ -4,7 +4,7 @@ pub mod sketcher;
 use std::cmp::Ordering;
 
 pub use checker::dssim::DssimChecker;
-pub use sketcher::line::LineSketcher;
+pub use sketcher::image_proc_sketcher::ImageProcSketcher;
 
 use checker::Checker;
 use sketcher::Sketcher;

@@ -1,11 +1,13 @@
 mod conversion;
 mod generator;
 
-use generator::sketcher::line::Style;
-use generator::{DssimChecker, Generator, LineSketcher, Options};
+use generator::sketcher::image_proc_sketcher;
+use generator::{DssimChecker, Generator, ImageProcSketcher, Options};
 use humantime::format_duration;
 use std::time::{Duration, Instant};
 use tracing::info;
+
+use crate::generator::sketcher;
 
 const MAX_ITERATIONS: u64 = 30_000;
 const DESIRED_SIMILARITY: f64 = 0.3;
@@ -16,6 +18,9 @@ const ESTIMATE_MULTIPLIER: f64 = 0.045;
 /// Each iteration takes about 1.23s on my machine in debug mode
 const ESTIMATE_MULTIPLIER: f64 = 1.229;
 
+const INPUT_PATH: &str = "./zelda.jpg";
+const OUTPUT_PATH: &str = "./zelda_sketch.jpg";
+
 fn main() {
     tracing_subscriber::fmt::init();
     let run_timer = Instant::now();
@@ -25,11 +30,19 @@ fn main() {
         .checked_add_signed(chrono::Duration::from_std(runtime_duration).unwrap())
         .unwrap();
 
-    let original = image::open("./zelda.png")
-        .expect("zelda png exists")
+    let original = image::open(INPUT_PATH)
+        .expect("input path exists")
         .into_rgba8();
     info!("original image loaded, now creating a generator");
-    let sketcher = LineSketcher::new(original.width(), original.height(), Style::CrossHatch);
+    let sketcher = ImageProcSketcher::new(
+        original.width(),
+        original.height(),
+        image_proc_sketcher::Options {
+            background: sketcher::Background::Black,
+            color_mode: sketcher::ColorMode::white(),
+            style: image_proc_sketcher::Style::triangles(),
+        },
+    );
     let checker = DssimChecker::new(original);
     let mut generator = Generator::new(
         sketcher,
@@ -45,9 +58,9 @@ fn main() {
 
     loop {
         if let Some(image) = generator.poll_next() {
-            info!("saving sketch to './zelda_sketch.png'...");
+            info!("saving sketch to '{OUTPUT_PATH}'...");
             image
-                .save("./zelda_sketch.png")
+                .save(OUTPUT_PATH)
                 .expect("saving image was successful");
             break;
         }
